@@ -21,7 +21,6 @@ function createGallaryMarkup(images) {
 
 cardContainer.addEventListener("click", onCardContainerClick);
 const lightbox = document.querySelector('.js-lightbox');
-
 let lightboxImage = document.querySelector(".lightbox__image");
 
 function onCardContainerClick(e) {
@@ -29,16 +28,17 @@ function onCardContainerClick(e) {
   if (!e.target.classList.contains('gallery__image')) {
     return;
   }
-   onOpenModal(lightbox);
+   onOpenModal(e);
+}
+
+function onOpenModal(e) {
+  window.addEventListener('keydown', onEscKeyPress);
+  window.addEventListener("keydown", onCarousel);
+
+  lightbox.classList.add("is-open");
 
   lightboxImage.src = e.target.dataset.source;
   lightboxImage.alt = e.target.alt;
-}
-
-function onOpenModal(img) {
-  window.addEventListener('keydown', onEscKeyPress);
-  window.addEventListener("keydown", onCarousel);
-  img.classList.add("is-open");
 }
 
 const closeBtn = document.querySelector('[data-action="close-lightbox"]');
@@ -47,7 +47,9 @@ closeBtn.addEventListener("click", onCloseModal);
 function onCloseModal() {
   window.removeEventListener('keydown', onEscKeyPress);
   window.removeEventListener("keydown", onCarousel);
+
   lightbox.classList.remove("is-open");
+
   lightboxImage.src = "";
   lightboxImage.alt = "";
 }
@@ -72,33 +74,41 @@ function onEscKeyPress(event) {
 
 const currentArr = galleryItems.map(i => i.original);
 const currentArrDesc = galleryItems.map(d => d.description);
-console.log(currentArr);
-console.log(currentArrDesc);
-
 
 function onCarousel(e) {
-  let currentImg = currentArr.indexOf(lightboxImage.src);
-  let currentDesc = currentArrDesc.indexOf(lightboxImage.alt);
-
-  console.log(currentImg);
   console.log(e.code);
   if (e.code != "ArrowLeft" && e.code != "ArrowRight") {
     return
   }
-if (e.code == "ArrowLeft") {
+  if (e.code == "ArrowLeft") {
+    onArrowLeft();
+  }
+  if (e.code == "ArrowRight") {
+    onArrowRight();
+  }
+}
+
+function onArrowLeft() {
+  let currentImg = currentArr.indexOf(lightboxImage.src);
+  let currentDesc = currentArrDesc.indexOf(lightboxImage.alt);
+
   lightboxImage.src = currentArr[currentImg - 1];
   lightboxImage.alt = currentArrDesc[currentDesc - 1];
+
     if (currentImg === 0) {
       lightboxImage.src = currentArr[currentArr.length - 1];
       lightboxImage.alt = currentArrDesc[currentArrDesc.length - 1];
     }
-  }
-  if (e.code == "ArrowRight") {
-    lightboxImage.src = currentArr[currentImg + 1];
-    lightboxImage.alt = currentArrDesc[currentDesc + 1];
+}
+
+function onArrowRight() {
+  let currentImg = currentArr.indexOf(lightboxImage.src);
+  let currentDesc = currentArrDesc.indexOf(lightboxImage.alt);
+
+  lightboxImage.src = currentArr[currentImg + 1];
+  lightboxImage.alt = currentArrDesc[currentDesc + 1];
     if (!currentArr.includes(lightboxImage.src)) {
       lightboxImage.src = currentArr[0];
       lightboxImage.alt = currentArrDesc[0];
     }
-  }
 }
