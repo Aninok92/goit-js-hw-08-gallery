@@ -1,4 +1,4 @@
-import galleryItems from "./gallery-items.js"
+import galleryItems from "./gallery-items.js";
 console.log(galleryItems);
 
 const cardContainer = document.querySelector(".js-gallery");
@@ -6,8 +6,9 @@ const cardsMarkup = createGallaryMarkup(galleryItems);
 cardContainer.insertAdjacentHTML("beforeend", cardsMarkup);
 
 function createGallaryMarkup(images) {
-  return images.map(({preview, original, description}) => {
-    return `<li class="gallery__item">
+  return images
+    .map(({ preview, original, description }) => {
+      return `<li class="gallery__item">
               <a class="gallery__link"
               href="${original}">
                 <img class="gallery__image"
@@ -16,23 +17,24 @@ function createGallaryMarkup(images) {
                     alt="${description}" />
               </a>
             </li>`;
-  }).join("");
+    })
+    .join("");
 }
 
 cardContainer.addEventListener("click", onCardContainerClick);
-const lightbox = document.querySelector('.js-lightbox');
+const lightbox = document.querySelector(".js-lightbox");
 let lightboxImage = document.querySelector(".lightbox__image");
 
 function onCardContainerClick(e) {
   e.preventDefault();
-  if (!e.target.classList.contains('gallery__image')) {
+  if (!e.target.classList.contains("gallery__image")) {
     return;
   }
-   onOpenModal(e);
+  onOpenModal(e);
 }
 
 function onOpenModal(e) {
-  window.addEventListener('keydown', onEscKeyPress);
+  window.addEventListener("keydown", onEscKeyPress);
   window.addEventListener("keydown", onCarousel);
 
   lightbox.classList.add("is-open");
@@ -45,7 +47,7 @@ const closeBtn = document.querySelector('[data-action="close-lightbox"]');
 closeBtn.addEventListener("click", onCloseModal);
 
 function onCloseModal() {
-  window.removeEventListener('keydown', onEscKeyPress);
+  window.removeEventListener("keydown", onEscKeyPress);
   window.removeEventListener("keydown", onCarousel);
 
   lightbox.classList.remove("is-open");
@@ -54,7 +56,7 @@ function onCloseModal() {
   lightboxImage.alt = "";
 }
 
-const overlay = document.querySelector('.lightbox__overlay');
+const overlay = document.querySelector(".lightbox__overlay");
 overlay.addEventListener("click", onBackdropClick);
 
 function onBackdropClick(event) {
@@ -64,7 +66,7 @@ function onBackdropClick(event) {
 }
 
 function onEscKeyPress(event) {
-  const ESC_KEY_CODE = 'Escape';
+  const ESC_KEY_CODE = "Escape";
   const isEscKey = event.code === ESC_KEY_CODE;
 
   if (isEscKey) {
@@ -72,13 +74,13 @@ function onEscKeyPress(event) {
   }
 }
 
-const currentArr = galleryItems.map(i => i.original);
-const currentArrDesc = galleryItems.map(d => d.description);
+const currentArr = galleryItems.map((i) => i.original);
+const currentArrDesc = galleryItems.map((d) => d.description);
 
 function onCarousel(e) {
   console.log(e.code);
   if (e.code != "ArrowLeft" && e.code != "ArrowRight") {
-    return
+    return;
   }
   if (e.code == "ArrowLeft") {
     onArrowLeft();
@@ -95,10 +97,10 @@ function onArrowLeft() {
   lightboxImage.src = currentArr[currentImg - 1];
   lightboxImage.alt = currentArrDesc[currentDesc - 1];
 
-    if (currentImg === 0) {
-      lightboxImage.src = currentArr[currentArr.length - 1];
-      lightboxImage.alt = currentArrDesc[currentArrDesc.length - 1];
-    }
+  if (currentImg === 0) {
+    lightboxImage.src = currentArr[currentArr.length - 1];
+    lightboxImage.alt = currentArrDesc[currentArrDesc.length - 1];
+  }
 }
 
 function onArrowRight() {
@@ -107,8 +109,8 @@ function onArrowRight() {
 
   lightboxImage.src = currentArr[currentImg + 1];
   lightboxImage.alt = currentArrDesc[currentDesc + 1];
-    if (!currentArr.includes(lightboxImage.src)) {
-      lightboxImage.src = currentArr[0];
-      lightboxImage.alt = currentArrDesc[0];
-    }
+  if (!currentArr.includes(lightboxImage.src)) {
+    lightboxImage.src = currentArr[0];
+    lightboxImage.alt = currentArrDesc[0];
+  }
 }
